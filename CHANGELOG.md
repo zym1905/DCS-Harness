@@ -2,6 +2,20 @@
 
 本项目的所有显著变更记录于此。版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [2.18.0] - 2026-10-10
+
+### 适配：DSH 0.2.0-rc.2（解除安装版本门 + 修正客户端模块图）
+
+- **问题一（硬阻断：DSH 直接拒绝安装）**：插件声明 `peerDependencies["@deepseek-ai/dsh-tools"] = "^0.1.1-rc.2"`，该范围等价 `>=0.1.1-rc.2 <0.2.0`，**不包含 0.2.0-rc.2**。DSH 0.2.0 起在安装/启动前有插件版本门（`evaluatePluginCompatibility`，位于 `@deepseek-ai/dsh-app-boot`）：对 manifest 里每个 `@deepseek-ai/dsh` / `@deepseek-ai/dsh-*` 的 peer，用 `semver.satisfies(runtimeVersion, range, { includePrerelease: true })` 与运行时版本比对，不满足即**拒绝安装**并把 package.json / pnpm-lock.yaml / node_modules 回滚：
+  `dsh: installation rejected: Plugin dsh-dcs-cloud@2.17.3 is incompatible with dsh 0.2.0-rc.2: peerDependencies {"@deepseek-ai/dsh-tools":"^0.1.1-rc.2"}`
+  → 改为精确版本 **`"0.2.0-rc.2"`**（与官方 dsh-* 包之间的 peer 钉法一致）。
+- **问题二（静默降级：客户端半失去加载排序）**：`dsh.client.inject` 仍指向 `@deepseek-ai/dsh-client-runtime`，而该包在 0.2.0 运行时中**已不存在**（0.2.0 的 290 个 `@deepseek-ai/*` 包里没有任何 `dsh-client-runtime`，npm 上也止步于 0.1.1-rc.2）。客户端模块图按 id 查表装载，查不到即**静默跳过**，于是插件与其所挂载 UI 模块之间失去先后关系 → 改为 0.2.0 中真实存在的三个模块：
+  - `@deepseek-ai/dsh-client-ui-conversation`（`conversation.view` slot）
+  - `@deepseek-ai/dsh-client-ui-settings`（`settings.section` slot）
+  - `@deepseek-ai/dsh-client-ui-sidebar`（`sidebar.brand.mark` / `sidebar.brand.name` slot）
+- **逐项核验后确认无需改动**：`defineTool` 仅新增可选 `projectContent` / `deferLoading`，对既有 `parameters`/`output`/`presentCall`/`presentResult`/`isConcurrencySafe`/`finalizeContent`/`timeoutMs` **完全向后兼容**；宿主服务 `tools` / `systemPrompt` / `webServer` / `sessions` / `tokenMeter` / `sessionPersistence` 名称全部保留；`ctx.webServer.register({ kind: 'prefix' })`、`ctx.systemPrompt.section({ name, order, text })`、客户端 `ctx.slots.inject(name, cb)` + `ctx.slots.register({ name, id, order, label }, Component)`、`window.__DSH_BOOT__.entries` 契约在 0.2.0 均未变化。
+- 版本：`2.17.3` → `2.18.0`（peer 提升为不兼容的 0.2.x，按语义化版本走 minor）。
+
 ## [2.17.3] - 2026-09-09
 
 ### 修复：「项目文件」tab 切换时完全驻留内存（路径/列表/已打开文件/滚动位置均不重置）

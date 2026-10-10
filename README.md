@@ -31,6 +31,8 @@ v2.0 曾把 DCS 研究工作台做成独立 profile（`dcs-harness`）单独开�
 
 **v2.17.0 · 新增「项目文件」tab（浏览当前项目容器文件：小文件在线预览 / 大文件下载）**：对话视图新增第 4 个 tab——**项目文件**：浏览当前项目在线容器里的文件夹（默认 `工作目录 /work/{user}`，支持跳转 `/public` 公共库、一键进入时空公共数据集目录 `/public/database/CNGBdb/pub/SciRAID/stomics` 等）；文件按 类型/大小/修改时间 列出，双击/按钮**在线预览**（文本 ≤4MB、图片 ≤6MB 直接内联查看），任意大小文件一键**下载**（容器→本机流式下载，附件形式保存）。宿主新增 `/v2/files/status|list|read|download` 四组路由；`dcs terminal exec`（python 列目录）与 `dcs terminal download` 机制已在线上容器实测验证。
 
+**v2.18.0 · 适配 DSH 0.2.0-rc.2**：插件运行版本从 dsh 0.1.x 提升到 **0.2.0-rc.2**。两处必改——(1) `peerDependencies["@deepseek-ai/dsh-tools"]` 由 `^0.1.1-rc.2`（等价 `>=0.1.1-rc.2 <0.2.0`，**不含 0.2.0**）改为精确 **`0.2.0-rc.2`**：DSH 0.2.0 的版本门会对每个 `@deepseek-ai/dsh-*` peer 做 `semver.satisfies(运行时版本, range, {includePrerelease:true})` 校验，不满足会**直接拒绝安装并回滚**；(2) `dsh.client.inject` 中的 `@deepseek-ai/dsh-client-runtime` 在 0.2.0 已不存在，改为实际承载本插件 UI 的三个客户端模块（`dsh-client-ui-conversation` / `dsh-client-ui-settings` / `dsh-client-ui-sidebar`），恢复客户端模块图的加载排序。`defineTool`、宿主服务名、`slots` API、`__DSH_BOOT__.entries` 逐项核验均向后兼容，宿主半与客户端半代码无需改动。
+
 **两个核心窗口**（`conversation.view` tab 环，随每个对话更新，`对话`原样保留）：
 
 | 窗口 | 内容 |
@@ -144,6 +146,11 @@ chmod +x dcs && sudo mv dcs /usr/local/bin/dcs
 
 ## 安装
 
+> 版本要求：**dsh 0.2.0-rc.2**（本插件 `peerDependencies["@deepseek-ai/dsh-tools"]` 精确钉在 `0.2.0-rc.2`）。
+> dsh 0.2.0 起有插件版本门：peer 不满足运行时的 `@deepseek-ai/dsh-*` 版本会**直接拒绝安装**并回滚，
+> 报错形如 `installation rejected: Plugin dsh-dcs-cloud@x is incompatible with dsh 0.2.0-rc.2`。
+> 只有在明确接受风险时才用 `dsh plugin allow-version` 授予该精确版本豁免。
+
 ```bash
 # 从 GitHub 安装（推荐）
 dsh plugin --profile web add github:BGIResearch/DCS-Harness
@@ -153,6 +160,10 @@ dsh plugin --profile web add /path/to/DCS-Harness
 
 # 然后重启 dsh web（或按 dsh 的插件热载提示操作）
 ```
+
+> **桌面应用（DeepSeek Harness.app）**：它使用名为 `desktop` 的 profile，且该 profile 由应用独占管理
+> （CLI 直接操作会报 `profile "desktop" is managed exclusively by the Electron application`）。
+> 在桌面版里请走 **设置 → 插件** 安装；命令行 `--profile web` 适用于 `dsh web` 启动的 Web 形态。
 
 在会话中对 agent 说「用 DCS 云分析 XX 数据」，或直接调用 `dcs_login` 输入 PAT 开始。
 
