@@ -34,12 +34,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BGIResearch/DCS-Harness.git"
+    "url": "git+https://github.com/zym1905/DCS-Harness.git"
   },
   "bugs": {
-    "url": "https://github.com/BGIResearch/DCS-Harness/issues"
+    "url": "https://github.com/zym1905/DCS-Harness/issues"
   },
-  "homepage": "https://github.com/BGIResearch/DCS-Harness#readme",
+  "homepage": "https://github.com/zym1905/DCS-Harness#readme",
   "scripts": {
     "check": "node scripts/check-hooks.cjs",
     "precommit": "npm run check"

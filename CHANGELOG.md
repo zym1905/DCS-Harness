@@ -15,6 +15,7 @@
   - `@deepseek-ai/dsh-client-ui-sidebar`（`sidebar.brand.mark` / `sidebar.brand.name` slot）
 - **逐项核验后确认无需改动**：`defineTool` 仅新增可选 `projectContent` / `deferLoading`，对既有 `parameters`/`output`/`presentCall`/`presentResult`/`isConcurrencySafe`/`finalizeContent`/`timeoutMs` **完全向后兼容**；宿主服务 `tools` / `systemPrompt` / `webServer` / `sessions` / `tokenMeter` / `sessionPersistence` 名称全部保留；`ctx.webServer.register({ kind: 'prefix' })`、`ctx.systemPrompt.section({ name, order, text })`、客户端 `ctx.slots.inject(name, cb)` + `ctx.slots.register({ name, id, order, label }, Component)`、`window.__DSH_BOOT__.entries` 契约在 0.2.0 均未变化。
 - 版本：`2.17.3` → `2.18.0`（peer 提升为不兼容的 0.2.x，按语义化版本走 minor）。
+- **仓库自洽**：本副本仓库为 `zym1905/DCS-Harness`（上游 `BGIResearch/DCS-Harness` 的完整副本，保留历史与 tag），`repository`/`bugs`/`homepage`、README 徽章与安装命令一并指向本副本——否则照 README 安装会装回**未适配 0.2.0 的上游版本**而被版本门拒绝。上游同步方式见 README 顶部说明。
 
 ## [2.17.3] - 2026-09-09
 

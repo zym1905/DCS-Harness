@@ -1,9 +1,9 @@
 # dsh-dcs-cloud
 
-[![GitHub stars](https://img.shields.io/github/stars/BGIResearch/DCS-Harness?style=flat-square)](https://github.com/BGIResearch/DCS-Harness/stargazers)
-[![GitHub license](https://img.shields.io/github/license/BGIResearch/DCS-Harness?style=flat-square)](LICENSE)
-[![GitHub release](https://img.shields.io/github/v/release/BGIResearch/DCS-Harness?style=flat-square)](https://github.com/BGIResearch/DCS-Harness/releases)
-[![GitHub last commit](https://img.shields.io/github/last-commit/BGIResearch/DCS-Harness?style=flat-square)](https://github.com/BGIResearch/DCS-Harness/commits/main)
+[![GitHub stars](https://img.shields.io/github/stars/zym1905/DCS-Harness?style=flat-square)](https://github.com/zym1905/DCS-Harness/stargazers)
+[![GitHub license](https://img.shields.io/github/license/zym1905/DCS-Harness?style=flat-square)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/zym1905/DCS-Harness?style=flat-square)](https://github.com/zym1905/DCS-Harness/releases)
+[![GitHub last commit](https://img.shields.io/github/last-commit/zym1905/DCS-Harness?style=flat-square)](https://github.com/zym1905/DCS-Harness/commits/main)
 [![Node version](https://img.shields.io/badge/node-%3E%3D18-brightgreen?style=flat-square)](package.json)
 [![npm](https://img.shields.io/npm/v/dsh-dcs-cloud?style=flat-square&label=npm)](https://www.npmjs.com/package/dsh-dcs-cloud)
 
@@ -12,6 +12,11 @@ DeepSeek Harness 插件：接入 BGI Research 发布的 [**dcs CLI**](https://gi
 在 DSH 里完成「任务分解 → 深度研究 → 形成研究方案 → 数据检索 → Genpilot 流程复用 → 脚本审计 → 在线/离线执行 → 学术网页报告」的完整闭环。
 
 > 💡 仓库 GitHub 名 `DCS-Harness`，npm 包名 `dsh-dcs-cloud`（同一项目）。
+
+> 📦 **本仓库**：`zym1905/DCS-Harness` —— 上游 [BGIResearch/DCS-Harness](https://github.com/BGIResearch/DCS-Harness) 的副本，
+> 保留完整提交历史与 tag，并额外做了 **DSH 0.2.0-rc.2 适配升级（v2.18.0）**（上游 v2.17.3 声明 `@deepseek-ai/dsh-tools: ^0.1.1-rc.2`，
+> 会被 DSH 0.2.0 的插件版本门拒绝安装）。同步上游：
+> `git fetch upstream && git merge upstream/main`（`upstream` 已指向 BGIResearch/DCS-Harness）。
 
 ## 🚀 DCS Harness v2.5（默认 dsh 内嵌，规划式工作流）
 
@@ -45,7 +50,7 @@ v2.0 曾把 DCS 研究工作台做成独立 profile（`dcs-harness`）单独开�
 
 ```bash
 # 1) 把插件装进默认 dsh（本地开发用本仓库路径；发布后用 github: 源）
-dsh plugin --profile web add /path/to/DCS-Harness   # 或 github:BGIResearch/DCS-Harness
+dsh plugin --profile web add /path/to/DCS-Harness   # 或 github:zym1905/DCS-Harness
 # 重启 dsh web 后，「项目管理 / 结果交付」两个窗口自动出现在对话上方；
 # 设置 → DCS Cloud：配置 PAT 后即可开始使用。
 
@@ -152,14 +157,17 @@ chmod +x dcs && sudo mv dcs /usr/local/bin/dcs
 > 只有在明确接受风险时才用 `dsh plugin allow-version` 授予该精确版本豁免。
 
 ```bash
-# 从 GitHub 安装（推荐）
-dsh plugin --profile web add github:BGIResearch/DCS-Harness
+# 从本仓库安装（推荐 —— 已适配 dsh 0.2.0-rc.2）
+dsh plugin --profile web add github:zym1905/DCS-Harness
 
 # 或本地目录安装
 dsh plugin --profile web add /path/to/DCS-Harness
 
 # 然后重启 dsh web（或按 dsh 的插件热载提示操作）
 ```
+
+> ⚠️ 不要直接安装上游 `github:BGIResearch/DCS-Harness`：其最新版 v2.17.3 的 peer 仍是 `^0.1.1-rc.2`，
+> 会被 dsh 0.2.0-rc.2 的版本门拒绝安装。本仓库的 v2.18.0 已修正。
 
 > **桌面应用（DeepSeek Harness.app）**：它使用名为 `desktop` 的 profile，且该 profile 由应用独占管理
 > （CLI 直接操作会报 `profile "desktop" is managed exclusively by the Electron application`）。
